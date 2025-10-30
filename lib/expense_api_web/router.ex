@@ -9,6 +9,7 @@ defmodule ExpenseApiWeb.Router do
     pipe_through :api
 
     get "/", HealthController, :index
+    get "/playground", PlaygroundController, :index
   end
 
   scope "/api", ExpenseApiWeb do
