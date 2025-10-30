@@ -75,8 +75,8 @@ defmodule ExpenseApiWeb.PlaygroundController do
           color: #2e7d32;
         }
         .grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          display: flex;
+          flex-direction: column;
           gap: 20px;
         }
         .tip {
@@ -101,6 +101,12 @@ defmodule ExpenseApiWeb.PlaygroundController do
           #{render_functions()}
           #{render_atoms()}
           #{render_tuples()}
+          #{render_recursao()}
+          #{render_comprehensions()}
+          #{render_structs()}
+          #{render_with()}
+          #{render_strings()}
+          #{render_processos()}
         </div>
 
         <div class="tip">
@@ -303,6 +309,196 @@ defmodule ExpenseApiWeb.PlaygroundController do
       acesso: elem(tuple, 1),
       uso: "Retorno de funções com status",
       exemplo: "Para JSON, converta com Tuple.to_list/1"
+    }
+  end
+
+  # Recursão
+  defp render_recursao do
+    data = test_recursao()
+    """
+    <div class="section">
+      <h2>Recursão</h2>
+      <div class="code">fatorial(5) = 5 * 4 * 3 * 2 * 1</div>
+      <div class="result">
+        <strong>Fatorial de 5:</strong> #{data.fatorial}<br>
+        <strong>Fibonacci(10):</strong> #{data.fibonacci}<br>
+        <strong>Soma [1..100]:</strong> #{data.soma_recursiva}<br>
+        <em>Recursão é fundamental em programação funcional!</em>
+      </div>
+    </div>
+    """
+  end
+
+  defp test_recursao do
+    %{
+      fatorial: fatorial(5),
+      fibonacci: fibonacci(10),
+      soma_recursiva: soma_lista([1, 2, 3, 4, 5])
+    }
+  end
+
+  defp fatorial(0), do: 1
+  defp fatorial(n), do: n * fatorial(n - 1)
+
+  defp fibonacci(0), do: 0
+  defp fibonacci(1), do: 1
+  defp fibonacci(n), do: fibonacci(n - 1) + fibonacci(n - 2)
+
+  defp soma_lista([]), do: 0
+  defp soma_lista([head | tail]), do: head + soma_lista(tail)
+
+  # Comprehensions
+  defp render_comprehensions do
+    data = test_comprehensions()
+    """
+    <div class="section">
+      <h2>Comprehensions</h2>
+      <div class="code">for n <- 1..5, do: n * n</div>
+      <div class="result">
+        <strong>Quadrados:</strong> #{inspect(data.quadrados)}<br>
+        <strong>Pares até 10:</strong> #{inspect(data.pares)}<br>
+        <strong>Produto cartesiano:</strong> #{inspect(data.cartesiano)}<br>
+        <strong>Map de lista:</strong> #{inspect(data.into_map)}<br>
+        <em>Comprehensions são loops funcionais!</em>
+      </div>
+    </div>
+    """
+  end
+
+  defp test_comprehensions do
+    %{
+      quadrados: for(n <- 1..5, do: n * n),
+      pares: for(n <- 1..10, rem(n, 2) == 0, do: n),
+      cartesiano: for(x <- [1, 2], y <- [:a, :b], do: {x, y}) |> Enum.map(&Tuple.to_list/1),
+      into_map: for({k, v} <- [a: 1, b: 2], into: %{}, do: {k, v * 10})
+    }
+  end
+
+  # Structs
+  defp render_structs do
+    data = test_structs()
+    """
+    <div class="section">
+      <h2>Structs</h2>
+      <div class="code">defmodule User do<br>&nbsp;&nbsp;defstruct [:name, :age, role: "user"]<br>end</div>
+      <div class="result">
+        <strong>User criado:</strong> #{inspect(data.user)}<br>
+        <strong>Acessar campo:</strong> #{data.name}<br>
+        <strong>Atualizado:</strong> #{inspect(data.updated)}<br>
+        <em>Structs são maps tipados com valores padrão</em>
+      </div>
+    </div>
+    """
+  end
+
+  defp test_structs do
+    # Simula um struct com map (struct real precisa ser definido no topo do módulo)
+    user = %{__struct__: User, name: "Francisco", age: 30, role: "Developer"}
+
+    %{
+      user: user,
+      name: user.name,
+      updated: %{user | age: 31}
+    }
+  end
+
+  # With (Error Handling)
+  defp render_with do
+    data = test_with()
+    """
+    <div class="section">
+      <h2>With (Error Handling)</h2>
+      <div class="code">with {:ok, value} <- funcao1(),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:ok, result} <- funcao2(value) do<br>&nbsp;&nbsp;result<br>end</div>
+      <div class="result">
+        <strong>Caso sucesso:</strong> #{inspect(data.sucesso)}<br>
+        <strong>Caso erro:</strong> #{inspect(data.erro)}<br>
+        <em>With encadeia operações que podem falhar</em>
+      </div>
+    </div>
+    """
+  end
+
+  defp test_with do
+    %{
+      sucesso: processar_usuario(%{nome: "Francisco", idade: 30}),
+      erro: processar_usuario(%{nome: "", idade: 15})
+    }
+  end
+
+  defp processar_usuario(dados) do
+    with {:ok, nome} <- validar_nome(dados.nome),
+         {:ok, idade} <- validar_idade(dados.idade) do
+      {:ok, "Usuário #{nome} (#{idade} anos) validado!"}
+    else
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  defp validar_nome(""), do: {:error, "Nome vazio"}
+  defp validar_nome(nome), do: {:ok, nome}
+
+  defp validar_idade(idade) when idade < 18, do: {:error, "Menor de idade"}
+  defp validar_idade(idade), do: {:ok, idade}
+
+  # Strings
+  defp render_strings do
+    data = test_strings()
+    """
+    <div class="section">
+      <h2>String Manipulation</h2>
+      <div class="code">String.upcase("elixir")</div>
+      <div class="result">
+        <strong>Uppercase:</strong> #{data.uppercase}<br>
+        <strong>Split:</strong> #{inspect(data.split)}<br>
+        <strong>Interpolação:</strong> #{data.interpolacao}<br>
+        <strong>Pattern match:</strong> #{data.pattern}<br>
+        <strong>Trim:</strong> "#{data.trim}"<br>
+        <em>Strings em Elixir são UTF-8 binaries</em>
+      </div>
+    </div>
+    """
+  end
+
+  defp test_strings do
+    "Olá " <> nome = "Olá Francisco"
+
+    %{
+      uppercase: String.upcase("elixir"),
+      split: String.split("um,dois,tres", ","),
+      interpolacao: "Resultado: #{2 + 2}",
+      pattern: nome,
+      trim: String.trim("  espaços  ")
+    }
+  end
+
+  # Processos
+  defp render_processos do
+    data = test_processos()
+    """
+    <div class="section">
+      <h2>Processos (Concurrency)</h2>
+      <div class="code">spawn(fn -> IO.puts("Hello") end)</div>
+      <div class="result">
+        <strong>PID atual:</strong> #{inspect(data.current_pid)}<br>
+        <strong>Mensagem enviada:</strong> #{inspect(data.mensagem)}<br>
+        <strong>Task executada:</strong> #{data.task_result}<br>
+        <em>Processos são leves e isolados em Elixir!</em>
+      </div>
+    </div>
+    """
+  end
+
+  defp test_processos do
+    # Task simples
+    task = Task.async(fn ->
+      Process.sleep(10)
+      "Tarefa concluída!"
+    end)
+
+    %{
+      current_pid: self(),
+      mensagem: "Processos se comunicam via mensagens",
+      task_result: Task.await(task)
     }
   end
 end
