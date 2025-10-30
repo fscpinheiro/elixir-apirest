@@ -16,75 +16,90 @@ defmodule ExpenseApiWeb.PlaygroundController do
       <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: #333;
-          padding: 20px;
-          min-height: 100vh;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+          background: #ffffff;
+          color: #24292f;
+          padding: 40px 20px;
+          line-height: 1.6;
         }
         .container {
-          max-width: 1200px;
+          max-width: 980px;
           margin: 0 auto;
-          background: white;
-          border-radius: 15px;
-          padding: 40px;
-          box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         h1 {
-          color: #667eea;
-          font-size: 2.5em;
-          margin-bottom: 10px;
-          text-align: center;
+          color: #24292f;
+          font-size: 2em;
+          font-weight: 600;
+          margin-bottom: 8px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid #d0d7de;
         }
         .subtitle {
-          text-align: center;
-          color: #666;
-          margin-bottom: 40px;
-          font-size: 1.1em;
+          color: #57606a;
+          margin-bottom: 30px;
+          font-size: 1em;
         }
         .section {
-          background: #f8f9fa;
-          padding: 25px;
-          margin-bottom: 20px;
-          border-radius: 10px;
-          border-left: 5px solid #667eea;
+          margin-bottom: 32px;
         }
         .section h2 {
-          color: #764ba2;
-          margin-bottom: 15px;
+          color: #24292f;
           font-size: 1.5em;
+          font-weight: 600;
+          margin-bottom: 16px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid #d0d7de;
         }
         .code {
-          background: #2d2d2d;
-          color: #f8f8f2;
-          padding: 15px;
-          border-radius: 8px;
-          font-family: 'Courier New', monospace;
-          margin: 10px 0;
+          background: #f6f8fa;
+          color: #24292f;
+          padding: 16px;
+          border-radius: 6px;
+          border: 1px solid #d0d7de;
+          font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+          margin: 12px 0;
           overflow-x: auto;
-          font-size: 0.9em;
+          font-size: 0.85em;
         }
         .result {
-          background: #e8f5e9;
-          padding: 15px;
-          border-radius: 8px;
-          margin: 10px 0;
-          border-left: 4px solid #4caf50;
+          background: #ffffff;
+          padding: 16px;
+          border-radius: 6px;
+          border: 1px solid #d0d7de;
+          margin: 12px 0;
         }
         .result strong {
-          color: #2e7d32;
+          color: #0969da;
+          font-weight: 600;
+        }
+        .result em {
+          color: #57606a;
+          font-style: italic;
+          display: block;
+          margin-top: 8px;
         }
         .grid {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 0;
         }
         .tip {
-          background: #fff3cd;
-          padding: 15px;
-          border-radius: 8px;
-          border-left: 4px solid #ffc107;
-          margin-top: 20px;
+          background: #fff8c5;
+          padding: 16px;
+          border-radius: 6px;
+          border: 1px solid #d4c894;
+          margin-top: 32px;
+          font-size: 0.9em;
+        }
+        .tip strong {
+          color: #7d4e00;
+        }
+        code {
+          background: #f6f8fa;
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-family: ui-monospace, SFMono-Regular, monospace;
+          font-size: 0.9em;
         }
       </style>
     </head>
