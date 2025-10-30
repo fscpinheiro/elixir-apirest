@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # Aplicação Phoenix
+  app:
+    build: .
+    container_name: expense_api
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+      - /app/deps
+      - /app/_build
+    environment:
+      MIX_ENV: dev
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/expense_api_dev
+      REDIS_URL: redis://dragonfly:6379
+      CLICKHOUSE_URL: http://clickhouse:8123
+    depends_on:
+      - db
+      - dragonfly
+      - clickhouse
+    command: sh -c "mix deps.get && mix ecto.create && mix ecto.migrate && mix phx.server"
+    stdin_open: true
+    tty: true
+
+  # PostgreSQL - Banco de dados principal (OLTP)
+  db:
+    image: postgres:16-alpine
+    container_name: expense_api_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: expense_api_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # DragonFly - Cache e filas (substituto Redis)
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    container_name: expense_api_dragonfly
+    ports:
+      - "6379:6379"
+    ulimits:
+      memlock: -1
+    volumes:
+      - dragonfly_data:/data
+
+  # ClickHouse - Banco analítico (OLAP)
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: expense_api_clickhouse
+    ports:
+      - "8123:8123"  # HTTP interface
+      - "9000:9000"  # Native client
+    environment:
+      CLICKHOUSE_DB: expense_analytics
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: clickhouse
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+volumes:
+  postgres_data:
+  dragonfly_data:
+  clickhouse_data:
