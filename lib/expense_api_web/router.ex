@@ -5,6 +5,12 @@ defmodule ExpenseApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/", ExpenseApiWeb do
+    pipe_through :api
+
+    get "/", HealthController, :index
+  end
+
   scope "/api", ExpenseApiWeb do
     pipe_through :api
   end
