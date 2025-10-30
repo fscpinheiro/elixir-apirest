@@ -122,7 +122,8 @@ defmodule ExpenseApiWeb.PlaygroundController do
       <div class="code">{status, message} = {:ok, "Funciona!"}</div>
       <div class="result">
         <strong>Status:</strong> #{inspect(data.status)}<br>
-        <strong>Mensagem:</strong> #{data.message}
+        <strong>Resultado:</strong> #{data.resultado}<br>
+        <em>#{data.exemplo}</em>
       </div>
     </div>
     """
