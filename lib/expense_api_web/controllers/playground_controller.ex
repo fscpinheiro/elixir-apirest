@@ -90,7 +90,7 @@ defmodule ExpenseApiWeb.PlaygroundController do
     %{
       explicacao: "Atoms são constantes onde o nome é o valor",
       exemplos: [:ok, :error, :success, :pending],
-      uso_comum: {:ok, "Muito usado em tuples para indicar status"}
+      uso_comum: "Muito usado em tuples para indicar status: {:ok, result}"
     }
   end
 
@@ -99,10 +99,11 @@ defmodule ExpenseApiWeb.PlaygroundController do
     tuple = {:ok, "Sucesso", 200}
 
     %{
-      original: tuple,
+      original: Tuple.to_list(tuple),
       tamanho: tuple_size(tuple),
       acesso: elem(tuple, 1),
-      uso: "Retorno de funções com status"
+      uso: "Retorno de funções com status",
+      exemplo: "Para JSON, converta com Tuple.to_list/1"
     }
   end
 end
