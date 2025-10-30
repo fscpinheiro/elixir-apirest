@@ -16,11 +16,14 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/expense_api_dev
       REDIS_URL: redis://dragonfly:6379
       CLICKHOUSE_URL: http://clickhouse:8123
+      # Para hot reload funcionar no Windows/Docker
+      ELIXIR_ERL_OPTIONS: "-kernel poll true"
     depends_on:
       - db
       - dragonfly
       - clickhouse
     command: sh -c "mix deps.get && mix ecto.create && mix ecto.migrate && mix phx.server"
+    restart: unless-stopped
     stdin_open: true
     tty: true
 
